@@ -1,0 +1,564 @@
+/* =========================================================================
+   INDEX-STYLE.CSS - Daily Inspiration Page Styling
+   Modern, Clean, and Engaging UI Design
+   ========================================================================= */
+
+/* =========================================================================
+   GLOBAL STYLES & ANIMATIONS
+   ========================================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* =========================================================================
+   ANIMATED BACKGROUND
+   ========================================================================= */
+
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    animation: float 20s infinite ease-in-out;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    top: -150px;
+    left: -150px;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 200px;
+    height: 200px;
+    top: 50%;
+    right: -100px;
+    animation-delay: 5s;
+}
+
+.shape-3 {
+    width: 150px;
+    height: 150px;
+    bottom: -75px;
+    left: 30%;
+    animation-delay: 10s;
+}
+
+.shape-4 {
+    width: 250px;
+    height: 250px;
+    top: 20%;
+    right: 20%;
+    animation-delay: 15s;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(30px, -30px) rotate(90deg);
+    }
+    50% {
+        transform: translate(-20px, 20px) rotate(180deg);
+    }
+    75% {
+        transform: translate(20px, 30px) rotate(270deg);
+    }
+}
+
+/* =========================================================================
+   MAIN CONTAINER
+   ========================================================================= */
+
+.main-container {
+    max-width: 1200px;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================================
+   HERO HEADER
+   ========================================================================= */
+
+.hero-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.logo-icon {
+    font-size: 48px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.main-title {
+    font-size: 48px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.tagline {
+    font-size: 18px;
+    color: #666;
+    margin: 10px 0 20px;
+    font-style: italic;
+}
+
+.stats-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.stats-icon {
+    font-size: 18px;
+}
+
+/* =========================================================================
+   CONTENT GRID - CARDS LAYOUT
+   ========================================================================= */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    transition: all 0.4s ease;
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+}
+
+/* Different gradient accents for each card type */
+.phrase-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+}
+
+.joke-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Card Header */
+.card-header {
+    padding: 30px 30px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.card-icon {
+    font-size: 36px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+/* Card Body */
+.card-body {
+    padding: 40px 30px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Phrase Specific Styling */
+.phrase-content {
+    position: relative;
+    font-size: 20px;
+    line-height: 1.8;
+    color: #444;
+    font-style: italic;
+    text-align: center;
+    margin: 0;
+}
+
+.phrase-content p {
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.quote-mark {
+    font-size: 60px;
+    color: #f093fb;
+    opacity: 0.3;
+    font-family: Georgia, serif;
+    line-height: 0;
+    position: absolute;
+}
+
+.quote-mark-start {
+    top: -10px;
+    left: -20px;
+}
+
+.quote-mark-end {
+    bottom: -40px;
+    right: -20px;
+}
+
+/* Joke Specific Styling */
+.joke-content {
+    text-align: center;
+}
+
+.joke-content p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #444;
+    margin: 0;
+}
+
+/* Card Footer */
+.card-footer {
+    padding: 20px 30px;
+    background: #f8f9fa;
+}
+
+.card-decoration {
+    height: 4px;
+    width: 60px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-radius: 2px;
+    margin: 0 auto;
+}
+
+/* =========================================================================
+   ACTION BUTTONS
+   ========================================================================= */
+
+.action-section {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.btn-refresh,
+.btn-manage {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 35px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-refresh {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-refresh:hover {
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+}
+
+.btn-manage {
+    background: white;
+    color: #667eea;
+    border: 2px solid #667eea;
+}
+
+.btn-manage:hover {
+    background: #667eea;
+    color: white;
+    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.3);
+}
+
+.btn-icon {
+    font-size: 20px;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================================
+   FUN FACT SECTION
+   ========================================================================= */
+
+.fun-fact-section {
+    margin-bottom: 40px;
+}
+
+.fun-fact-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 25px 30px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.fun-fact-icon {
+    font-size: 36px;
+    flex-shrink: 0;
+}
+
+.fun-fact-text {
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* =========================================================================
+   FOOTER
+   ========================================================================= */
+
+.page-footer {
+    text-align: center;
+    padding: 30px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.page-footer p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.footer-time {
+    color: #999;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* =========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================= */
+
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 32px;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .card-body {
+        padding: 30px 20px;
+        min-height: 150px;
+    }
+
+    .phrase-content {
+        font-size: 18px;
+    }
+
+    .joke-content p {
+        font-size: 16px;
+    }
+
+    .hero-header {
+        padding: 30px 20px;
+        margin-bottom: 30px;
+    }
+
+    .action-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-refresh,
+    .btn-manage {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .fun-fact-card {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .main-title {
+        font-size: 28px;
+    }
+
+    .tagline {
+        font-size: 16px;
+    }
+
+    .card-header {
+        padding: 20px 20px 15px;
+    }
+
+    .card-title {
+        font-size: 20px;
+    }
+
+    .card-icon {
+        font-size: 30px;
+    }
+
+    .phrase-content {
+        font-size: 16px;
+    }
+
+    .quote-mark {
+        font-size: 40px;
+    }
+}
+
+/* =========================================================================
+   ACCESSIBILITY & PRINT STYLES
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media print {
+    body {
+        background: white;
+    }
+
+    .background-animation,
+    .action-section,
+    .fun-fact-section {
+        display: none;
+    }
+
+    .card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        page-break-inside: avoid;
+    }
+}

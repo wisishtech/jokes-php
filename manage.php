@@ -134,12 +134,21 @@ $allQuotes = $stmt->fetchAll();
  */
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Manage Jokes and Phrases</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Jokes & Phrases ⚙️</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="manage-style.css">
 </head>
 <body>
-    <h1>Manage Jokes and Phrases</h1>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1>Manage Content ⚙️</h1>
+            <p class="subtitle">Add, edit, and organize your jokes and phrases</p>
+        </header>
     
     <?php 
     /*
@@ -147,7 +156,10 @@ $allQuotes = $stmt->fetchAll();
      * Only show message if it exists (not empty)
      */
     if ($message): ?>
-        <p><strong><?php echo htmlspecialchars($message); ?></strong></p>
+        <div class="message success">
+            <span>✅</span>
+            <span><?php echo htmlspecialchars($message); ?></span>
+        </div>
     <?php endif; ?>
     
     <!-- 
@@ -155,122 +167,146 @@ $allQuotes = $stmt->fetchAll();
     DYNAMIC FORM - CHANGES BASED ON WHETHER WE'RE ADDING OR EDITING
     =============================================================================
     -->
-    <h2><?php 
-        /*
-         * TERNARY OPERATOR - Shorthand if/else
-         * Syntax: condition ? value_if_true : value_if_false
-         */
-        echo $editItem ? 'Edit Entry' : 'Add New Entry'; 
-    ?></h2>
-    
-    <form method="POST">
-        <!--
-        HIDDEN FIELDS - Not visible to user but sent with form
-        These help us know what action to perform
-        -->
-        <input type="hidden" name="action" value="<?php echo $editItem ? 'update' : 'create'; ?>">
+    <section class="form-section">
+        <h2>
+            <?php echo $editItem ? '✏️ Edit Entry' : '➕ Add New Entry'; ?>
+        </h2>
         
-        <?php if ($editItem): ?>
-            <!-- If editing, we need to send the ID -->
-            <input type="hidden" name="id" value="<?php echo $editItem['id']; ?>">
-        <?php endif; ?>
-        
-        <p>
-            <label>Phrase:</label><br>
-            <textarea name="phrase" rows="3" cols="50"><?php 
-                /*
-                 * PRE-FILL FORM FIELDS WHEN EDITING
-                 * If $editItem exists, show its data, otherwise show empty
-                 */
-                echo $editItem ? htmlspecialchars($editItem['phrase']) : ''; 
-            ?></textarea>
-        </p>
-        
-        <p>
-            <label>Joke:</label><br>
-            <textarea name="jokes" rows="3" cols="50"><?php 
-                echo $editItem ? htmlspecialchars($editItem['jokes']) : ''; 
-            ?></textarea>
-        </p>
-        
-        <p>
-            <input type="submit" value="<?php echo $editItem ? 'Update Entry' : 'Add Entry'; ?>">
+        <form method="POST">
+            <!--
+            HIDDEN FIELDS - Not visible to user but sent with form
+            These help us know what action to perform
+            -->
+            <input type="hidden" name="action" value="<?php echo $editItem ? 'update' : 'create'; ?>">
+            
             <?php if ($editItem): ?>
-                <!-- Show cancel link only when editing -->
-                <a href="manage.php">Cancel Edit</a>
+                <!-- If editing, we need to send the ID -->
+                <input type="hidden" name="id" value="<?php echo $editItem['id']; ?>">
             <?php endif; ?>
-        </p>
-    </form>
-    
-    <hr>
+            
+            <div class="form-group">
+                <label for="phrase">💭 Phrase of Wisdom:</label>
+                <textarea 
+                    id="phrase" 
+                    name="phrase" 
+                    rows="3" 
+                    placeholder="Enter an inspiring phrase or quote..."><?php 
+                    /*
+                     * PRE-FILL FORM FIELDS WHEN EDITING
+                     * If $editItem exists, show its data, otherwise show empty
+                     */
+                    echo $editItem ? htmlspecialchars($editItem['phrase']) : ''; 
+                ?></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="jokes">😄 Daily Joke:</label>
+                <textarea 
+                    id="jokes" 
+                    name="jokes" 
+                    rows="3" 
+                    placeholder="Enter a funny joke to brighten someone's day..."><?php 
+                    echo $editItem ? htmlspecialchars($editItem['jokes']) : ''; 
+                ?></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    <?php echo $editItem ? '💾 Update Entry' : '➕ Add Entry'; ?>
+                </button>
+                <?php if ($editItem): ?>
+                    <!-- Show cancel link only when editing -->
+                    <a href="manage.php" class="btn-secondary">❌ Cancel Edit</a>
+                <?php endif; ?>
+            </div>
+        </form>
+    </section>
     
     <!-- 
     =============================================================================
     DISPLAY ALL ENTRIES IN A TABLE
     =============================================================================
     -->
-    <h2>All Entries</h2>
-    <?php if (empty($allQuotes)): ?>
-        <p>No entries found.</p>
-    <?php else: ?>
-        <table border="1">
-            <tr>
-                <th>ID</th>
-                <th>Phrase</th>
-                <th>Joke</th>
-                <th>Created At</th>
-                <th>Actions</th>
-            </tr>
-            <?php foreach ($allQuotes as $quote): ?>
-                <tr>
-                    <td><?php echo htmlspecialchars($quote['id']); ?></td>
-                    <td><?php 
-                        /*
-                         * TRUNCATE LONG TEXT FOR TABLE DISPLAY
-                         * substr() FUNCTION gets part of a string
-                         * Syntax: substr(string, start, length)
-                         * strlen() FUNCTION gets string length
-                         */
-                        $phrasePreview = htmlspecialchars(substr($quote['phrase'], 0, 50));
-                        if (strlen($quote['phrase']) > 50) {
-                            $phrasePreview .= '...';  // .= means "add to the end of"
-                        }
-                        echo $phrasePreview;
-                    ?></td>
-                    <td><?php 
-                        // Same truncation for jokes
-                        $jokePreview = htmlspecialchars(substr($quote['jokes'], 0, 50));
-                        if (strlen($quote['jokes']) > 50) {
-                            $jokePreview .= '...';
-                        }
-                        echo $jokePreview;
-                    ?></td>
-                    <td><?php echo htmlspecialchars($quote['created_at']); ?></td>
-                    <td>
-                        <!-- 
-                        EDIT LINK - Uses GET parameter to identify which item to edit
-                        URL will be: manage.php?edit=5 (where 5 is the ID)
-                        -->
-                        <a href="manage.php?edit=<?php echo $quote['id']; ?>">Edit</a>
-                        
-                        <!-- 
-                        DELETE FORM - Inline form with JavaScript confirmation
-                        onsubmit runs JavaScript before form submits
-                        confirm() shows a yes/no dialog to user
-                        -->
-                        <form method="POST" style="display: inline;" 
-                              onsubmit="return confirm('Are you sure you want to delete this entry?');">
-                            <input type="hidden" name="action" value="delete">
-                            <input type="hidden" name="id" value="<?php echo $quote['id']; ?>">
-                            <input type="submit" value="Delete">
-                        </form>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif; ?>
-    
-    <p><a href="index.php">Back to Daily View</a></p>
+    <section class="table-section">
+    <a href="index.php" class="back-link">← Back to Daily View</a>
+
+        <h2>📋 All Entries</h2>
+        <?php if (empty($allQuotes)): ?>
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <h3>No Entries Yet</h3>
+                <p>Start by adding your first joke or phrase above!</p>
+            </div>
+        <?php else: ?>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Phrase</th>
+                        <th>Joke</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($allQuotes as $quote): ?>
+                        <tr>
+                            <td data-label="ID" class="id-cell">
+                                #<?php echo htmlspecialchars($quote['id']); ?>
+                            </td>
+                            <td data-label="Phrase" class="preview-cell"><?php 
+                                /*
+                                 * TRUNCATE LONG TEXT FOR TABLE DISPLAY
+                                 * substr() FUNCTION gets part of a string
+                                 * Syntax: substr(string, start, length)
+                                 * strlen() FUNCTION gets string length
+                                 */
+                                $phrasePreview = htmlspecialchars(substr($quote['phrase'], 0, 50));
+                                if (strlen($quote['phrase']) > 50) {
+                                    $phrasePreview .= '...';  // .= means "add to the end of"
+                                }
+                                echo $phrasePreview ?: '<em style="color: #cbd5e0;">No phrase</em>';
+                            ?></td>
+                            <td data-label="Joke" class="preview-cell"><?php 
+                                // Same truncation for jokes
+                                $jokePreview = htmlspecialchars(substr($quote['jokes'], 0, 50));
+                                if (strlen($quote['jokes']) > 50) {
+                                    $jokePreview .= '...';
+                                }
+                                echo $jokePreview ?: '<em style="color: #cbd5e0;">No joke</em>';
+                            ?></td>
+                            <td data-label="Created" class="date-cell">
+                                <?php echo date('M j, Y', strtotime($quote['created_at'])); ?>
+                            </td>
+                            <td data-label="Actions" class="actions-cell">
+                                <!-- 
+                                EDIT LINK - Uses GET parameter to identify which item to edit
+                                URL will be: manage.php?edit=5 (where 5 is the ID)
+                                -->
+                                <a href="manage.php?edit=<?php echo $quote['id']; ?>" class="btn-edit">
+                                    ✏️ Edit
+                                </a>
+                                
+                                <!-- 
+                                DELETE FORM - Inline form with JavaScript confirmation
+                                onsubmit runs JavaScript before form submits
+                                confirm() shows a yes/no dialog to user
+                                -->
+                                <form method="POST" class="delete-form" 
+                                      onsubmit="return confirm('Are you sure you want to delete this entry?');">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="id" value="<?php echo $quote['id']; ?>">
+                                    <button type="submit" class="btn-delete">🗑️ Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+    </section>
+        
+    </div> <!-- Close container -->
 
 <!--
 =============================================================================

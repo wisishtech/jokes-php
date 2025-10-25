@@ -17,9 +17,9 @@
 // =============================================================================
 // In PHP, variables start with $ and don't need to be declared with a type
 $host = 'localhost';           // String: Where our database server is located
-$dbname = 'quotes_database';   // String: Name of our database
-$username = 'root';            // String: Default MAMP username
-$password = 'root';            // String: Default MAMP password 
+$dbname = 'wisdom_quotes_database';   // String: Name of our database
+$username = 'wisdom';            // String: Default MAMP username
+$password = 'Admin@2025';            // String: Default MAMP password 
 // $port = '8889';               // String: Default database server port connnection
 
 

@@ -1,0 +1,537 @@
+/* =========================================================================
+   MANAGE-STYLE.CSS - Management Page Styling
+   Professional admin interface for content management
+   ========================================================================= */
+
+/* =========================================================================
+   PAGE LAYOUT
+   ========================================================================= */
+
+body {
+    background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================================
+   HEADER
+   ========================================================================= */
+
+.header {
+    text-align: center;
+    padding-bottom: 30px;
+    border-bottom: 3px solid #e0e7ff;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    font-size: 42px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 18px;
+    font-style: italic;
+}
+
+/* =========================================================================
+   MESSAGES
+   ========================================================================= */
+
+.message {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.success {
+    background: #d4edda;
+    border: 2px solid #28a745;
+    color: #155724;
+}
+
+.message.error {
+    background: #f8d7da;
+    border: 2px solid #dc3545;
+    color: #721c24;
+}
+
+.message span:first-child {
+    font-size: 24px;
+}
+
+/* =========================================================================
+   FORM SECTION
+   ========================================================================= */
+
+.form-section {
+    background: linear-gradient(135deg, #f8f9ff 0%, #fff5f8 100%);
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 40px;
+    border: 2px solid #e0e7ff;
+}
+
+.form-section h2 {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+    font-size: 16px;
+}
+
+.form-group textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #e0e7ff;
+    border-radius: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.form-group textarea:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    outline: none;
+}
+
+.form-group textarea::placeholder {
+    color: #aaa;
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 14px 32px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: white;
+    color: #667eea;
+    padding: 14px 32px;
+    border: 2px solid #667eea;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* =========================================================================
+   TABLE SECTION
+   ========================================================================= */
+
+.table-section {
+    margin-bottom: 40px;
+}
+
+.table-section h2 {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #f8f9fa;
+    border-radius: 16px;
+    border: 2px dashed #cbd5e0;
+}
+
+.empty-state-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.empty-state p {
+    color: #888;
+    font-size: 16px;
+}
+
+/* Data Table */
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.data-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.data-table th {
+    padding: 18px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.data-table tbody tr {
+    border-bottom: 1px solid #e0e7ff;
+    transition: all 0.3s ease;
+}
+
+.data-table tbody tr:hover {
+    background: #f8f9ff;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.data-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data-table td {
+    padding: 18px 16px;
+    font-size: 15px;
+    color: #444;
+}
+
+.id-cell {
+    font-weight: 700;
+    color: #667eea;
+    font-size: 14px;
+}
+
+.preview-cell {
+    max-width: 300px;
+    line-height: 1.6;
+}
+
+.date-cell {
+    color: #666;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+/* Action Buttons in Table */
+.btn-edit,
+.btn-delete {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.btn-edit {
+    background: #3182ce;
+    color: white;
+    text-decoration: none;
+    margin-right: 8px;
+}
+
+.btn-edit:hover {
+    background: #2c5aa0;
+    transform: translateY(-2px);
+}
+
+.btn-delete {
+    background: #e53e3e;
+    color: white;
+    border: none;
+}
+
+.btn-delete:hover {
+    background: #c53030;
+    transform: translateY(-2px);
+}
+
+.delete-form {
+    display: inline;
+}
+
+/* =========================================================================
+   BACK LINK
+   ========================================================================= */
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #f8f9fa;
+    color: #667eea;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 10px 0 20px 0;
+}
+
+.back-link:hover {
+    background: #667eea;
+    color: white;
+    transform: translateX(-5px);
+}
+
+/* =========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================= */
+
+@media (max-width: 1024px) {
+    .container {
+        padding: 30px;
+    }
+
+    .data-table {
+        font-size: 14px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 14px 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .header h1 {
+        font-size: 32px;
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+
+    .form-section {
+        padding: 20px;
+    }
+
+    /* Responsive Table */
+    .data-table {
+        border: 0;
+        box-shadow: none;
+    }
+
+    .data-table thead {
+        display: none;
+    }
+
+    .data-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        background: white;
+        border-radius: 12px;
+        border: 2px solid #e0e7ff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 16px;
+    }
+
+    .data-table tbody tr:hover {
+        transform: none;
+    }
+
+    .data-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 10px 0;
+        border-bottom: 1px solid #f0f0f0;
+        text-align: right;
+    }
+
+    .data-table td:last-child {
+        border-bottom: none;
+        padding-top: 15px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .data-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #667eea;
+        text-align: left;
+        flex-shrink: 0;
+    }
+
+    .preview-cell {
+        max-width: none;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .actions-cell {
+        width: 100%;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        width: 100%;
+        text-align: center;
+        margin-right: 0;
+    }
+
+    .delete-form {
+        display: block;
+        width: 100%;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 16px;
+    }
+
+    .header h1 {
+        font-size: 28px;
+    }
+
+    .form-section h2,
+    .table-section h2 {
+        font-size: 24px;
+    }
+}
+
+/* =========================================================================
+   PRINT STYLES
+   ========================================================================= */
+
+@media print {
+    body {
+        background: white;
+    }
+
+    .container {
+        box-shadow: none;
+    }
+
+    .form-section,
+    .actions-cell,
+    .back-link,
+    .message {
+        display: none;
+    }
+
+    .data-table {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    .data-table tbody tr:hover {
+        background: white;
+    }
+}
