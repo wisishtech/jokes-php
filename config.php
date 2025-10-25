@@ -15,12 +15,11 @@
 // =============================================================================
 // DATABASE CONFIGURATION VARIABLES
 // =============================================================================
-// In PHP, variables start with $ and don't need to be declared with a type
-$host = 'localhost';           // String: Where our database server is located
-$dbname = 'wisdom_quotes_database';   // String: Name of our database
-$username = 'wisdom';            // String: Default MAMP username
-$password = 'Admin@2025';            // String: Default MAMP password 
-// $port = '8889';               // String: Default database server port connnection
+// IMPORTANT: iPage uses a remote MySQL server, not 'localhost'
+$host = 'inventionuniversecom.ipagemysql.com';  // ✅ Your actual iPage MySQL server, for dev use localhost
+$dbname = 'wisdom_quotes_database';              // Your database name
+$username = 'wisdom';                            // Your database username for dev use root
+$password = 'Admin@2025';                        // Your database password for dev use root
 
 
 // =============================================================================
@@ -39,6 +38,9 @@ try {
     // setAttribute() is a METHOD that belongs to the PDO CLASS
     // We're calling: $object->method()
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Set the character set to UTF-8 for proper encoding
+    $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     
     // If we get here, connection was successful!
     
@@ -71,5 +73,10 @@ try {
  * 5. ERROR HANDLING:
  *    - try { } catch { } helps prevent crashes
  *    - Always handle database connection errors!
+ * 
+ * 6. iPAGE SPECIFIC:
+ *    - iPage uses remote MySQL servers, not 'localhost'
+ *    - The hostname format is: yourdomain.ipagemysql.com
+ *    - This is normal for shared hosting environments
  */
 ?>
