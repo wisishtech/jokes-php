@@ -248,7 +248,6 @@ Refresh spin: 0.5s on click
 
 Approximate compressed sizes:
 - **index.php**: ~6KB
-- **index-style.css**: ~12KB
 - **style.css**: ~3KB
 - **manage-style.css**: ~10KB
 - **Total**: ~31KB

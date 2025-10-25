@@ -42,7 +42,6 @@ $totalEntries = $countStmt->fetch()['total'];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daily Inspiration ✨</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="index-style.css">
 </head>
 <body>
     <!-- Animated Background Elements -->

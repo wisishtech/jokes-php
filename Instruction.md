@@ -5,8 +5,7 @@ A beautiful, modern web application that displays daily jokes and phrases to bri
 ## 📁 Files Included
 
 1. **index.php** - Home page with daily joke and phrase display
-2. **index-style.css** - Modern, animated styling for the home page
-3. **style.css** - Base global styles shared across all pages
+3. **style.css** - styles for the home page
 4. **manage-style.css** - Professional admin interface styling
 5. **manage.php** - Your existing management page (already uploaded)
 
@@ -41,7 +40,6 @@ your-project-folder/
 ├── index.php (NEW)
 ├── manage.php (already exists)
 ├── style.css (NEW)
-├── index-style.css (NEW)
 └── manage-style.css (NEW)
 ```
 
@@ -89,7 +87,7 @@ Each time a user visits or refreshes the page, they see different content!
 ## 🎨 Customization
 
 ### Colors
-The default color scheme uses purple gradients. To change colors, edit these CSS variables in `index-style.css`:
+The default color scheme uses purple gradients. To change colors, edit these CSS variables in `style.css`:
 
 **Main Gradient** (line 15):
 ```css
