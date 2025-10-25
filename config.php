@@ -18,7 +18,7 @@
 // IMPORTANT: iPage uses a remote MySQL server, not 'localhost'
 $host = 'inventionuniversecom.ipagemysql.com';  // ✅ Your actual iPage MySQL server, for dev use localhost
 $dbname = 'wisdom_quotes_database';              // Your database name
-$username = 'wisdom';                            // Your database username for dev use root
+$username = 'wisdom_admin';                            // Your database username for dev use root
 $password = 'Admin@2025';                        // Your database password for dev use root
 
 
