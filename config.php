@@ -16,10 +16,15 @@
 // DATABASE CONFIGURATION VARIABLES
 // =============================================================================
 // IMPORTANT: iPage uses a remote MySQL server, not 'localhost'
-$host = 'inventionuniversecom.ipagemysql.com';  // ✅ Your actual iPage MySQL server, for dev use localhost
-$dbname = 'wisdom_quotes_database';              // Your database name
-$username = 'wisdom_admin';                            // Your database username for dev use root
-$password = 'Admin@2025';                        // Your database password for dev use root
+// $host = 'inventionuniversecom.ipagemysql.com';  // ✅ Your actual iPage MySQL server, for dev use localhost
+// $dbname = 'wisdom_quotes_database';              // Your database name
+// $username = 'wisdom_admin';                            // Your database username for dev use root
+// $password = 'Admin@2025';                        // Your database password for dev use root
+
+$host = 'localhost';  // ✅ Your actual iPage MySQL server, for dev use localhost
+$dbname = 'quotes_database';              // Your database name
+$username = 'root';                            // Your database username for dev use root
+$password = 'root';                        // Your database password for dev use root
 
 
 // =============================================================================

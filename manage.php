@@ -51,24 +51,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // =============================================================================
             // CREATE OPERATION
             // =============================================================================
-            case 'create':
-                // Get form data and clean it
-                // trim() FUNCTION removes whitespace from beginning and end
-                $phrase = trim($_POST['phrase']);
-                $joke = trim($_POST['jokes']);
+             case 'create':
                 
-                // Validation: Make sure at least one field has content
-                if (!empty($phrase) || !empty($joke)) {
-                    // Prepare INSERT statement
-                    // NOW() is a MySQL function that gets current timestamp
-                    $stmt = $pdo->prepare("INSERT INTO quotes (phrase, jokes, created_at) VALUES (?, ?, NOW())");
-                    $stmt->execute([$phrase, $joke]);
-                    $message = "Entry added successfully!";
+            // Get form data and clean it
+            // trim() FUNCTION removes whitespace from beginning and end
+            $phrase = trim($_POST['phrase']);
+            $joke = trim($_POST['jokes']);
+            $image_filename = null; // Default: no image
+
+            // Handle image upload
+            if (isset($_FILES['entry_image']) && $_FILES['entry_image']['size'] > 0) {
+                
+                // Validate file type
+                $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+                $file_type = $_FILES['entry_image']['type'];
+                
+                if (in_array($file_type, $allowed_types)) {
+                    
+                    // Validate file size (2MB max)
+                    if ($_FILES['entry_image']['size'] <= 2 * 1024 * 1024) {
+                        
+                        // Create unique filename
+                        $extension = pathinfo($_FILES['entry_image']['name'], PATHINFO_EXTENSION);
+                        $image_filename = 'quote_' . time() . '_' . rand(1000, 9999) . '.' . $extension;
+                        
+                        // Create uploads directory if it doesn't exist
+                        if (!file_exists('uploads')) {
+                            mkdir('uploads', 0777, true);
+                        }
+                        
+                        // Move uploaded file
+                        $upload_path = 'uploads/' . $image_filename;
+                        if (!move_uploaded_file($_FILES['entry_image']['tmp_name'], $upload_path)) {
+                            $message = "Failed to upload image!";
+                            $messageType = "error";
+                            $image_filename = null;
+                        }
+                    } else {
+                        $message = "Image size must be less than 2MB!";
+                        $messageType = "error";
+                    }
                 } else {
-                    $message = "Please enter either a phrase or a joke.";
+                    $message = "Only JPG, PNG, and GIF images are allowed!";
+                    $messageType = "error";
                 }
-                break;  // Exit the switch statement
-                
+            }
+            
+            // Validation: Make sure at least one field has content
+            if (!empty($phrase) || !empty($joke)) {
+                // Prepare INSERT statement
+                // NOW() is a MySQL function that gets current timestamp
+                $stmt = $pdo->prepare("INSERT INTO quotes (phrase, jokes, image_filename, created_at) VALUES (?, ?, ?, NOW())");
+                $stmt->execute([$phrase, $joke, $image_filename]);
+                $message = "Entry added successfully!";
+            } else {
+                $message = "Please enter either a phrase or a joke.";
+            }
+            break;  // Exit the switch statement
+
             // =============================================================================
             // UPDATE OPERATION
             // =============================================================================
@@ -76,11 +116,71 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $id = $_POST['id'];           // Get the ID of item to update
                 $phrase = trim($_POST['phrase']);
                 $joke = trim($_POST['jokes']);
+
+                // Get current entry to check existing image
+                $stmt = $pdo->prepare("SELECT image_filename FROM quotes WHERE id = ?");
+                $stmt->execute([$id]);
+                $currentEntry = $stmt->fetch();
+                $image_filename = $currentEntry['image_filename']; // Keep existing image by default
+            
+                 // Handle new image upload
+                if (isset($_FILES['entry_image']) && $_FILES['entry_image']['error'] === UPLOAD_ERR_OK) {
+                    // Validate file type
+                    $allowed_types = ['image/jpeg', 'image/png', 'image/gif'];
+                    $file_type = $_FILES['entry_image']['type'];
+                    
+                    if (in_array($file_type, $allowed_types)) {
+                        // Validate file size (2MB max)
+                        if ($_FILES['entry_image']['size'] <= 2 * 1024 * 1024) {
+                            // Create unique filename
+                            $extension = pathinfo($_FILES['entry_image']['name'], PATHINFO_EXTENSION);
+                            $new_image_filename = 'quote_' . time() . '_' . rand(1000, 9999) . '.' . $extension;
+                            
+                            // Create uploads directory if it doesn't exist
+                            if (!file_exists('uploads')) {
+                                mkdir('uploads', 0777, true);
+                            }
+                            
+                            // Move uploaded file
+                            $upload_path = 'uploads/' . $new_image_filename;
+                            if (move_uploaded_file($_FILES['entry_image']['tmp_name'], $upload_path)) {
+                                // Delete old image if exists
+                                if ($image_filename && file_exists('uploads/' . $image_filename)) {
+                                    unlink('uploads/' . $image_filename);
+                                }
+                                // Update to new image filename
+                                $image_filename = $new_image_filename;
+                            } else {
+                                $message = "Failed to upload new image!";
+                                $messageType = "error";
+                            }
+                        } else {
+                            $message = "Image size must be less than 2MB!";
+                            $messageType = "error";
+                        }
+                    } else {
+                        $message = "Only JPG, PNG, and GIF images are allowed!";
+                        $messageType = "error";
+                    }
+                }
                 
-                // Prepare UPDATE statement
-                $stmt = $pdo->prepare("UPDATE quotes SET phrase = ?, jokes = ? WHERE id = ?");
-                $stmt->execute([$phrase, $joke, $id]);
-                $message = "Entry updated successfully!";
+                // Check if user wants to remove the image
+                if (isset($_POST['remove_image']) && $_POST['remove_image'] == '1') {
+                    // Delete old image file if exists
+                    if ($image_filename && file_exists('uploads/' . $image_filename)) {
+                        unlink('uploads/' . $image_filename);
+                    }
+                    $image_filename = null;
+                }
+
+                            
+                 // Prepare UPDATE statement with image
+                $stmt = $pdo->prepare("UPDATE quotes SET phrase = ?, jokes = ?, image_filename = ? WHERE id = ?");
+                $stmt->execute([$phrase, $joke, $image_filename, $id]);
+                
+                if (!isset($message) || empty($message)) {
+                    $message = "Entry updated successfully!";
+                }
                 break;
                 
             // =============================================================================
@@ -88,10 +188,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // =============================================================================
             case 'delete':
                 $id = $_POST['id'];
+
+                // Get image filename before deleting
+                $stmt = $pdo->prepare("SELECT image_filename FROM quotes WHERE id = ?");
+                $stmt->execute([$id]);
+                $entry = $stmt->fetch();
                 
                 // Prepare DELETE statement
                 $stmt = $pdo->prepare("DELETE FROM quotes WHERE id = ?");
                 $stmt->execute([$id]);
+                // Delete image file if exists
+                if ($entry && $entry['image_filename'] && file_exists('uploads/' . $entry['image_filename'])) {
+                    unlink('uploads/' . $entry['image_filename']);
+                }
                 $message = "Entry deleted successfully!";
                 break;
         }
@@ -172,7 +281,13 @@ $allQuotes = $stmt->fetchAll();
             <?php echo $editItem ? '✏️ Edit Entry' : '➕ Add New Entry'; ?>
         </h2>
         
-        <form method="POST">
+        <!-- 
+            FIX APPLIED: enctype="multipart/form-data" is REQUIRED for file uploads.
+            Without this attribute, PHP's $_FILES array will always be empty,
+            meaning no image will ever reach the server no matter what you do.
+            This is the most common reason image uploads silently fail.
+        -->
+        <form method="POST" enctype="multipart/form-data">
             <!--
             HIDDEN FIELDS - Not visible to user but sent with form
             These help us know what action to perform
@@ -209,6 +324,26 @@ $allQuotes = $stmt->fetchAll();
                     echo $editItem ? htmlspecialchars($editItem['jokes']) : ''; 
                 ?></textarea>
             </div>
+
+            <!-- Image upload field -->
+            <div class="form-group">
+               <label>
+                    Add Image (Optional):
+                    <input type="file" name="entry_image" accept="image/jpeg,image/png,image/gif">
+                    <small>Max size: 2MB. Formats: JPG, PNG, GIF</small>
+               </label>
+                
+                <?php if ($editItem && $editItem['image_filename']): ?>
+                    <div style="margin: 10px 0;">
+                        <strong>Current Image:</strong><br>
+                        <img src="uploads/<?php echo htmlspecialchars($editItem['image_filename']); ?>" 
+                            alt="Current" style="max-width: 200px; margin: 5px 0;">
+                        <label style="display: block;">
+                            <input type="checkbox" name="remove_image" value="1"> Remove current image
+                        </label>
+                    </div>
+                <?php endif; ?>
+            </div>
             
             <div class="form-actions">
                 <button type="submit" class="btn-primary">
@@ -244,6 +379,7 @@ $allQuotes = $stmt->fetchAll();
                         <th>ID</th>
                         <th>Phrase</th>
                         <th>Joke</th>
+                        <th>Image</th>
                         <th>Created At</th>
                         <th>Actions</th>
                     </tr>
@@ -275,6 +411,26 @@ $allQuotes = $stmt->fetchAll();
                                 }
                                 echo $jokePreview ?: '<em style="color: #cbd5e0;">No joke</em>';
                             ?></td>
+                            <!-- Display image thumbnail -->
+                            <!-- 
+                                FIX APPLIED: Changed $entry['image_filename'] to $quote['image_filename']
+                                
+                                WHY THIS WAS BROKEN:
+                                $entry was only defined inside the 'delete' case above (lines ~194-203).
+                                Inside this foreach loop, the current row is stored in $quote (set by the
+                                foreach statement: "foreach ($allQuotes as $quote)").
+                                Using $entry here would either be undefined (PHP notice) or — if a delete
+                                had just run — would accidentally reference the last deleted row's data.
+                            -->
+                            <td data-label="Image">
+                                <?php if ($quote['image_filename']): ?>
+                                    <img src="uploads/<?php echo htmlspecialchars($quote['image_filename']); ?>" 
+                                        alt="Entry image" 
+                                        style="max-width: 80px; max-height: 60px; border-radius: 6px;">
+                                <?php else: ?>
+                                    <span style="color: #999;">No image</span>
+                                <?php endif; ?>
+                            </td>
                             <td data-label="Created" class="date-cell">
                                 <?php echo date('M j, Y', strtotime($quote['created_at'])); ?>
                             </td>

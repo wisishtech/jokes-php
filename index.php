@@ -14,22 +14,43 @@
 require_once 'config.php';
 
 // =============================================================================
-// GET RANDOM JOKE AND PHRASE
+// GET A SINGLE RANDOM ENTRY WITH BOTH JOKE AND PHRASE (AND OPTIONAL IMAGE)
 // =============================================================================
+/*
+ * FIX APPLIED: Previously the page ran TWO separate queries — one for a random
+ * joke and one for a random phrase. This meant the joke and phrase shown came
+ * from completely different database rows and their images couldn't be matched.
+ *
+ * Now we fetch ONE random row that has BOTH a phrase and a joke.
+ * This ensures the image belongs to the same entry as the content being shown.
+ *
+ * We use a fallback query to handle rows that only have one field filled in.
+ */
 
-// Get a random entry that has a joke
-$jokeStmt = $pdo->prepare("SELECT jokes FROM quotes WHERE jokes IS NOT NULL AND jokes != '' ORDER BY RAND() LIMIT 1");
-$jokeStmt->execute();
-$jokeData = $jokeStmt->fetch();
+// First try: get a row that has both a phrase AND a joke
+$stmt = $pdo->prepare("
+    SELECT id, phrase, jokes, image_filename 
+    FROM quotes 
+    WHERE phrase IS NOT NULL AND phrase != '' 
+      AND jokes IS NOT NULL AND jokes != '' 
+    ORDER BY RAND() 
+    LIMIT 1
+");
+$stmt->execute();
+$dailyEntry = $stmt->fetch();
 
-// Get a random entry that has a phrase
-$phraseStmt = $pdo->prepare("SELECT phrase FROM quotes WHERE phrase IS NOT NULL AND phrase != '' ORDER BY RAND() LIMIT 1");
-$phraseStmt->execute();
-$phraseData = $phraseStmt->fetch();
+// Second try: if no row has both, just grab any row
+if (!$dailyEntry) {
+    $stmt = $pdo->prepare("SELECT id, phrase, jokes, image_filename FROM quotes ORDER BY RAND() LIMIT 1");
+    $stmt->execute();
+    $dailyEntry = $stmt->fetch();
+}
 
-// Fallback content if database is empty
-$dailyJoke = $jokeData ? $jokeData['jokes'] : "Why don't scientists trust atoms? Because they make up everything! 🔬";
-$dailyPhrase = $phraseData ? $phraseData['phrase'] : "The journey of a thousand miles begins with a single step. 🌟";
+// Fallback content if the database is completely empty
+$dailyJoke   = ($dailyEntry && $dailyEntry['jokes'])  ? $dailyEntry['jokes']  : "Why don't scientists trust atoms? Because they make up everything! 🔬";
+$dailyPhrase = ($dailyEntry && $dailyEntry['phrase']) ? $dailyEntry['phrase'] : "The journey of a thousand miles begins with a single step. 🌟";
+$dailyImage  = ($dailyEntry && $dailyEntry['image_filename']) ? $dailyEntry['image_filename'] : null;
+$dailyId     = ($dailyEntry) ? $dailyEntry['id'] : null;
 
 // Get total count for stats
 $countStmt = $pdo->query("SELECT COUNT(*) as total FROM quotes");
@@ -64,6 +85,31 @@ $totalEntries = $countStmt->fetch()['total'];
                 <span class="stats-icon">📊</span>
                 <span class="stats-text"><?php echo $totalEntries; ?> inspiring entries</span>
             </div>
+
+            <?php 
+            /*
+             * DISPLAY THE IMAGE FROM THE SAME ROW AS THE SHOWN PHRASE & JOKE
+             * 
+             * FIX APPLIED: Previously there was a second separate query here
+             * (inside the header) that overwrote $phraseData and fetched a
+             * different random row. This caused mismatches — the image could
+             * belong to a completely different entry than the text on screen.
+             *
+             * Now we simply use $dailyImage which was set from the same
+             * $dailyEntry row we fetched at the top of the file.
+             *
+             * htmlspecialchars() protects against XSS — always escape output!
+             */
+            if ($dailyImage): ?>
+                <img src="uploads/<?php echo htmlspecialchars($dailyImage); ?>" 
+                     alt="Illustration for entry #<?php echo htmlspecialchars($dailyId); ?>" 
+                     style="max-width: 100%; max-height: 200px; border-radius: 12px; margin: 15px 0 20px;">
+            <?php endif; ?>
+
+            <?php if ($dailyId): ?>
+                <!-- Show which database row is being displayed, helpful for debugging -->
+                <div style="font-size: 0.8rem; opacity: 0.6; margin-bottom: 5px;">Entry #<?php echo htmlspecialchars($dailyId); ?></div>
+            <?php endif; ?>
         </header>
 
         <!-- Main Content Grid -->
